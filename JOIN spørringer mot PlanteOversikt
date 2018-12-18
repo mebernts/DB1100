@@ -1,0 +1,31 @@
+SELECT *
+FROM planter JOIN stell
+ -- Hvis man bruker spørringen over kommer det til å vise en kobinasjon av alle dataelementene i de to tabellene --
+ -- Bruk en ON for å spesifisere bedre hva som vi vil koble de to tabellene med --
+ 
+ SELECT *
+FROM planter JOIN stell
+ON planter.planteid = stell.planteid
+
+-- Vi får fremdeles dobbelt opp med informasjon om dette, noe som lett kan fikses med å definere hva vi vil skal vise. --
+
+SELECT pl.navn, pl.latinsknavn, stl.vannmengde, stl.lysmengde
+FROM planter JOIN stell
+ON pl.planteid = stl.planteid
+
+-- Vi får da ut mer konkret informasjon som er lettere å se gjennom.--
+
+-- Hvis vi har lyst til å få ut ekstra informasjon så kan vi bruke en outer join, i ekseplet jeg viste i videoen bruker jeg en left join--
+
+SELECT pl.navn, pl.latinsknavn, stl.vannmengde, stl.lysmengde
+FROM planter LEFT JOIN stell
+ON pl.planteid = stl.planteid
+
+-- Det ble også nevnt hvordan vi kan gjøre en full join ved bruk av union, og jeg har lagt med spørringen som kan gjøre dette--
+
+SELECT pl.navn, pl.latinsknavn, stl.vannmengde, stl.lysmengde
+FROM planter LEFT JOIN stell
+ON pl.planteid = stl.planteid
+UNION ((ALL))
+FROM planter RIGHT JOIN stell
+ON pl.planteid = stl.planteid
