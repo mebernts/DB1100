@@ -1,0 +1,89 @@
+DROP DATABASE IF EXISTS PlanteOversikt
+
+CREATE DATABASE PlanteOversikt
+USE PlanteOversikt
+
+	-- Dropp alle tabeller inne i databasen
+	-- Pass på at tabeller som inneholder fremmed nøkkler blir slettet i rett rekkefølge! 
+
+DROP TABLE IF EXISTS Stell;
+DROP TABLE IF EXISTS Lys;
+DROP TABLE IF EXISTS Vann;
+DROP TABLE IF EXISTS Planter;
+DROP TABLE IF EXISTS PlanteFamilie;
+
+
+	-- Lag alle hovedtabeller, vær ops på at tabeller som blir brukt som fremmednøkkler må bli etablert før denne nøkkelen kan bli laget.
+    
+CREATE TABLE PlanteFamilie (
+FamilieID INT NOT NULL AUTO_INCREMENT,
+Navn VARCHAR(45),
+LatinskNavn VARCHAR(50),
+Slekter INT,
+Arter INT,
+PRIMARY KEY (FamilieID)
+);
+
+CREATE TABLE Planter (
+PlanteID INT NOT NULL AUTO_INCREMENT,
+Navn VARCHAR (45),
+LatinskNavn VARCHAR (50),
+Familie INT NOT NULL,
+MaxStørrelse DECIMAL (2,1),
+CONSTRAINT PlaPK PRIMARY KEY(PlanteID),
+CONSTRAINT FamFK FOREIGN KEY(Familie) REFERENCES PlanteFamilie(FamilieID)
+);
+
+CREATE TABLE Vann (
+VannMengde VARCHAR (50),
+Beskrivelse VARCHAR (100),
+CONSTRAINT VannPK PRIMARY KEY (VannMengde)
+);
+
+CREATE TABLE Lys(
+LysMengde VARCHAR (50),
+Beskrivelse VARCHAR (100),
+CONSTRAINT LysPK PRIMARY KEY (LysMengde)
+);
+
+CREATE TABLE Stell(
+PlanteID INT,
+VannMengde VARCHAR(50),
+LysMengde VARCHAR(50), 
+CONSTRAINT PlaPK PRIMARY KEY (PlanteID),
+CONSTRAINT PlaFK FOREIGN KEY (PlanteID) REFERENCES Planter(PlanteID),
+CONSTRAINT VannFK FOREIGN KEY (VannMengde) REFERENCES Vann(VannMengde),
+CONSTRAINT LysFK FOREIGN KEY (LysMengde) REFERENCES Lys(LysMengde)
+);
+
+-- Data legges inn etter alle tabeller har blitt etablert
+
+INSERT INTO PlanteFamilie (Navn, LatinskNavn, Slekter, Arter) VALUES
+	("Myrkonglefamilien", "Araceae", 114, 3750),
+	("Aspargesfamilien", "Asparagaceae", 114, 2900),
+	("Nestleplanter", "Urticaceae", 53, 2625),
+	("Araliaplanter", "Araliaceae", 52, 700);
+INSERT INTO Planter (Navn, LatinskNavn, Familie, MaxStørrelse) VALUES
+	("Vindusblad", "Monstera Deliciosa", 1, 9.1),
+	("Fredslilje", "Spathiphyllum wallisii", 1, 0.6),
+	("Eføy", "Hedera helix", 4, 3.0),
+	("Sjømannstrøst", "Dieffenbachia", 1, 3.0),
+	("Elefantøre", "Pilea peperomioides", 3, 0.3),
+	("Grønnrenner", "Chlorophytum comosum", 2, 0.6);
+INSERT INTO Vann (VannMengde, Beskrivelse) VALUES
+	("Lite", "Planten trengs ikke å vannes mer enn 1 gang annen hver uke"),
+	("Moderat", "Planten trengs å vannes etter at jorden har blitt tørr"),
+	("Gjevnlig", "Planten trengs å vannes før jorden har blitt helt tørr"),
+	("Ofte", "Planten trengs å vannes 2-3 ganger i uken");
+
+INSERT INTO Lys (LysMengde, Beskrivelse) VALUES
+	("Skygge", "Planten trives best når den er i skyggen og unna direkte sollys"),
+	("Indirekte sollys", "Planten trives best når den får en god mengde lyd uten å stå direkte i solen"),
+	("Direkte sollys", "Planten trives best i mye lys og greier fint å stå direkte i solen");
+INSERT INTO Stell (PlanteId, VannMengde, LysMengde) VALUES
+	(0001, "Moderat", "Indirekte sollys"),
+	(0002, "Gjevnlig", "Skygge"),
+	(0003, "Ofte", "Skygge"),
+	(0004, "Moderat", "Indirekte sollys"),
+	(0005, "Lite", "Skygge"),
+	(0006, "Ofte", "Direkte sollys");
